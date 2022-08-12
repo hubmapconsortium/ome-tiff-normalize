@@ -1,0 +1,1 @@
+hubmap/ome-tiff-normalize	docker/Dockerfile	base_directory_build
