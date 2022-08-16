@@ -13,6 +13,6 @@ inputs:
       position: 0
 outputs:
   output_dir:
-    type: Directory
+    type: Directory[]
     outputBinding:
-      glob: .
+      glob: ./*
