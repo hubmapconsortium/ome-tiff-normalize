@@ -1,2 +1,3 @@
+*.ome.tiff
 .idea
 __pycache__
