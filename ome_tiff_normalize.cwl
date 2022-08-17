@@ -11,6 +11,11 @@ inputs:
     type: Directory
     inputBinding:
       position: 0
+  output_path_prefix:
+    type: string?
+    inputBinding:
+      position: 1
+      prefix: "--output-path-prefix"
 outputs:
   output_dir:
     type: Directory[]
