@@ -3,7 +3,7 @@ class: CommandLineTool
 label: OME-TIFF metadata normalization via bftools
 hints:
   DockerRequirement:
-    dockerPull: hubmap/ome-tiff-normalize:1.0
+    dockerPull: hubmap/ome-tiff-normalize:latest
 baseCommand: /opt/bftools_wrapper.py
 
 inputs:
@@ -11,6 +11,11 @@ inputs:
     type: Directory
     inputBinding:
       position: 0
+  output_path_prefix:
+    type: string?
+    inputBinding:
+      position: 1
+      prefix: "--output-path-prefix"
 outputs:
   output_dir:
     type: Directory[]

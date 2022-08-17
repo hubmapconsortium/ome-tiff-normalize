@@ -36,14 +36,15 @@ def fix_ome_tiff(source: Path, dest: Path):
     run(command)
 
 
-def main(input_dir: Path):
+def main(input_dir: Path, output_path_prefix):
     for source, dest in find_ome_tiffs(input_dir):
-        fix_ome_tiff(source, dest)
+        fix_ome_tiff(source, output_path_prefix / dest)
 
 
 if __name__ == "__main__":
     p = ArgumentParser()
     p.add_argument("input_dir", type=Path)
+    p.add_argument("--output-path-prefix", type=Path, default=Path())
     args = p.parse_args()
 
-    main(args.input_dir)
+    main(args.input_dir, args.output_path_prefix)
