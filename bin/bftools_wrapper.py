@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+import json
 import re
 import shlex
 from argparse import ArgumentParser
-from os import walk
+from os import fspath, walk
 from pathlib import Path
 from subprocess import run
 from typing import Iterable, Tuple
@@ -14,6 +15,14 @@ bfconvert_command_template = [
     "{source}",
     "{dest}",
 ]
+
+
+def get_file_manifest(path_absolute: Path, path_relative: Path):
+    return {
+        "class": "File",
+        "path": fspath(path_absolute),
+        "basename": fspath(path_relative),
+    }
 
 
 def find_ome_tiffs(input_dir: Path) -> Iterable[Tuple[Path, Path]]:
@@ -37,8 +46,13 @@ def fix_ome_tiff(source: Path, dest: Path):
 
 
 def main(input_dir: Path, output_path_prefix):
-    for source, dest in find_ome_tiffs(input_dir):
-        fix_ome_tiff(source, output_path_prefix / dest)
+    manifest = []
+    for source, dest_relative in find_ome_tiffs(input_dir):
+        dest_absolute = output_path_prefix / dest_relative
+        fix_ome_tiff(source, dest_absolute)
+        manifest.append(get_file_manifest(dest_absolute, dest_relative))
+    with open("manifest.json", "w") as f:
+        json.dump(manifest, f)
 
 
 if __name__ == "__main__":
