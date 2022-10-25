@@ -19,7 +19,7 @@ inputs:
       prefix: "--output-path-prefix"
 outputs:
   output_dir:
-    type: File[]
+    type: Directory[]
     outputBinding:
       glob: manifest.json
       loadContents: True

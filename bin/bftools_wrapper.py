@@ -3,7 +3,8 @@ import json
 import re
 import shlex
 from argparse import ArgumentParser
-from os import fspath, walk
+from collections import defaultdict
+from os import walk
 from pathlib import Path
 from subprocess import run
 from typing import Iterable, Tuple
@@ -17,12 +18,27 @@ bfconvert_command_template = [
 ]
 
 
-def get_file_manifest(path_absolute: Path, path_relative: Path):
-    return {
-        "class": "File",
-        "path": fspath(path_absolute),
-        "basename": fspath(path_relative),
-    }
+def get_directory_manifest(paths: Iterable[Path]):
+    listing = defaultdict(list)
+    for path in paths:
+        # hack
+        if len(path.parts) == 1:
+            directory = "."
+        else:
+            directory = path.parts[0]
+        listing[directory].append(path)
+
+    manifest = []
+    for directory, file_paths in listing.items():
+        manifest.append(
+            {
+                "class": "Directory",
+                "path": directory,
+                "basename": directory,
+            }
+        )
+
+    return manifest
 
 
 def find_ome_tiffs(input_dir: Path) -> Iterable[Tuple[Path, Path]]:
@@ -46,13 +62,13 @@ def fix_ome_tiff(source: Path, dest: Path):
 
 
 def main(input_dir: Path, output_path_prefix):
-    manifest = []
+    files = []
     for source, dest_relative in find_ome_tiffs(input_dir):
         dest_absolute = output_path_prefix / dest_relative
         fix_ome_tiff(source, dest_absolute)
-        manifest.append(get_file_manifest(dest_absolute, dest_relative))
+        files.append(dest_relative)
     with open("manifest.json", "w") as f:
-        json.dump(manifest, f)
+        json.dump(get_directory_manifest(files), f)
 
 
 if __name__ == "__main__":
