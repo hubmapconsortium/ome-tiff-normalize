@@ -1,9 +1,10 @@
 cwlVersion: v1.1
 class: CommandLineTool
 label: OME-TIFF metadata normalization via bftools
-hints:
+requirements:
   DockerRequirement:
-    dockerPull: hubmap/ome-tiff-normalize:1.1
+    dockerPull: hubmap/ome-tiff-normalize:latest
+  InlineJavascriptRequirement: {}
 baseCommand: /opt/bftools_wrapper.py
 
 inputs:
@@ -20,4 +21,6 @@ outputs:
   output_dir:
     type: Directory[]
     outputBinding:
-      glob: ./*
+      glob: manifest.json
+      loadContents: True
+      outputEval: $(eval(self[0].contents))
