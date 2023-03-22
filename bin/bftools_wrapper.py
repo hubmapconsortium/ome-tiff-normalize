@@ -13,6 +13,7 @@ ome_tiff_pattern = re.compile(r"(?P<basename>.*)\.ome\.tif(f?)$")
 
 bfconvert_command_template = [
     "/opt/bftools/bfconvert",
+    "-bigtiff",
     "{source}",
     "{dest}",
 ]
