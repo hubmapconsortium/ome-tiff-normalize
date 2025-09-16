@@ -18,6 +18,8 @@ bfconvert_command_template = [
     "{dest}",
 ]
 
+directory_selection = {"pipeline_output", "stitched"}
+
 
 def get_directory_manifest(paths: Iterable[Path]):
     listing = defaultdict(list)
@@ -49,8 +51,14 @@ def find_ome_tiffs(input_dir: Path) -> Iterable[Tuple[Path, Path]]:
      [1] output file Path (source file relative to input_dir)
     """
     for dirpath_str, dirnames, filenames in walk(input_dir):
-        if "sprm_outputs" in dirnames:
-            dirnames.remove("sprm_outputs")
+        # Only recurse if inside something in directory_selection
+        # or into directories with those names
+        dirpath_parts = set(Path(dirpath_str).parts)
+        if not (dirpath_parts & directory_selection):
+            # Not in a selected directory, only recurse into those directory names
+            old_dirname_set = set(dirnames)
+            dirnames.clear()
+            dirnames.extend(old_dirname_set & directory_selection)
         dirpath = Path(dirpath_str)
         for filename in filenames:
             if ome_tiff_pattern.match(filename):
