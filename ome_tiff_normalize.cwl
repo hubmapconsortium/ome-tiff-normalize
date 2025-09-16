@@ -3,7 +3,7 @@ class: CommandLineTool
 label: OME-TIFF metadata normalization via bftools
 requirements:
   DockerRequirement:
-    dockerPull: hubmap/ome-tiff-normalize:latest
+    dockerPull: hubmap/ome-tiff-normalize:55d100f7c855
   InlineJavascriptRequirement: {}
 baseCommand: /opt/bftools_wrapper.py
 
