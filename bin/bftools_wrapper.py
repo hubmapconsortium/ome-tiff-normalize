@@ -48,7 +48,9 @@ def find_ome_tiffs(input_dir: Path) -> Iterable[Tuple[Path, Path]]:
      [0] full Path to source file
      [1] output file Path (source file relative to input_dir)
     """
-    for dirpath_str, _, filenames in walk(input_dir):
+    for dirpath_str, dirnames, filenames in walk(input_dir):
+        if "sprm_outputs" in dirnames:
+            dirnames.remove("sprm_outputs")
         dirpath = Path(dirpath_str)
         for filename in filenames:
             if ome_tiff_pattern.match(filename):
